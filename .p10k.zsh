@@ -108,7 +108,9 @@
     # public_ip             # public IP address
     # proxy                 # system-wide http/https/ftp proxy
     # battery               # internal battery
-    # wifi                  # wifi speed
+    disk_usage
+    #ram
+    #wifi                  # wifi speed
     # example               # example user-defined segment (see prompt_example function below)
   )
 
