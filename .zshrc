@@ -53,9 +53,10 @@ export PATH="/usr/local/sbin:$PATH"
 export MC_SKIN=blue
 export BAT_THEME="Nord"
 
-if [ "$OS" = 'OSX' ]; then
+if [[ "$OSTYPE" == "darwin"* ]]; then
   export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
-  alias upup="sudo apt update && sudo apt upgrade && audo apt autoremove"
+
+  alias upup="brew update && brew upgrade"
 
   . $HOME/.asdf/asdf.sh
 
@@ -67,8 +68,8 @@ if [ "$OS" = 'OSX' ]; then
 
   # profile.d z.sh
   . /usr/local/etc/profile.d/z.sh
-else 
-  alias upup="brew update && brew upgrade"
+elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  alias upup="sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y"
 fi
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
