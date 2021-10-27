@@ -20,10 +20,10 @@ set wildmenu
 set number	" Show line numbers
 set nowrap	" Wrap lines
 set showbreak=+++	" Wrap-broken line prefix
-set textwidth=100	" Line wrap (number of cols)
+"set textwidth=100	" Line wrap (number of cols)
 set showmatch	" Highlight matching brace
 "set spell	" Enable spell-checking
-set visualbell	" Use visual bell (no beeping)
+"set visualbell	" Use visual bell (no beeping)
  
 set hlsearch	" Highlight all search results
 set smartcase	" Enable smart-case search
