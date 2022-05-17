@@ -37,21 +37,69 @@ plugins=(
 
 source $ZSH/oh-my-zsh.sh
 
-# Example aliases
-alias dkps="docker ps"
-alias dkpsa="docker ps -a"
-alias dkst="docker stats"
-alias dkimgs="docker images"
-alias vscode-cp-config="cp -R ~/Dev/vscode .vscode"
-alias ssh-office="ssh paul@192.168.1.67"
+function node_search() {
+    grep -n -i -r --color \
+        --exclude-dir=node_modules \
+        --exclude-dir=dist \
+        --exclude-dir=static \
+        --exclude-dir=.serverless \
+        --exclude-dir=coverage \
+        --exclude-dir=apps/web-app/src/assets/webviewer \
+        --exclude=yarn.lock \
+        --exclude=yarn-error.log \
+        --exclude=webviewer-ui.min.js \
+        --exclude-dir=build \
+        $1 * .[^.]* | more
+}
+
+function git_cull_branches() {
+    git fetch -p
+
+    for branch in $(git for-each-ref --format '%(refname) %(upstream:track)' refs/heads | awk '$2 == "[gone]" {sub("refs/heads/", "", $1); print $1}'); do 
+        git branch -D $branch; 
+    done;
+}
+
+function git_child_statuses() {
+    find . -maxdepth 1 -mindepth 1 -type d -exec sh -c '(echo {} && cd {} && git status -s && echo)' \;
+}
+
+function filter_file() {
+    cat $1 | grep -i $2 | less
+}
+
+alias ssh-office="ssh paul@192.168.1.4"
 alias ssh-wd="ssh sshd@nas-wd"
 alias ssh-seagate="ssh paul@seagate-d2.localdomain"
 alias ssh-unifi="ssh pi@unifi-controller"
-alias docker_stopall="docker stop $$(docker ps -aq)"
+
+alias grepnode="node_search $1"
+alias gn="grepnode"
+
+alias jstime="node -e 'console.log(Date.now())' | pbcopy"
+
+alias git-latest="git describe --abbrev=0"
+alias git-ammend="git commit --amend --no-edit"
+alias git-log-search="git rev-list --all | xargs git grep -iF '$1'"
+alias git-log-detail="git log -p"
+alias git-cull-branches='git_cull_branches'
+alias git-child-statuses='git_child_statuses'
+
+alias yd="ydiff -s -w0"
+alias ydc="ydiff -s -w0 --cached"
+
+alias k="kubectl"
+
+alias filter="filter_file $1 $2"
 
 export PATH="/usr/local/sbin:$PATH"
 export MC_SKIN=blue
 export BAT_THEME="Nord"
+
+alias python="$(pyenv which python)"
+alias pip="$(pyenv which pip)"
+alias awslocal="$(pyenv which awslocal)"
+
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
@@ -86,3 +134,14 @@ complete -o nospace -C /usr/local/bin/terraform terraform
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
+export PATH="/usr/local/opt/ruby/bin:$PATH"
+
+# Load ATIUN cli history replacement
+#ATUIN_NOBIND="true"
+#eval "$(atuin init zsh)"
